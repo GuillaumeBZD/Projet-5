@@ -12,26 +12,9 @@ const lesCanaps = fetch("http://localhost:3000/api/products/")
   .catch(function (err) {
     //une erreur est survenue
   });
-
-//affichage des élements produit
-function affichageProduit(resultat) {
-  for (let i = 0; i < resultat.length; i++) {
-    const kanap = resultat[i];
-    const lienProduit = genererProduit(
-      kanap._id,
-      kanap.imageUrl,
-      kanap.name,
-      kanap.description
-    );
-    //récupération de l'élément du DOM qui acceuillera les fiches
-    const emplacementProduit = document.getElementById("items");
-    //Ajout des elements produit crees dans le DOM
-    emplacementProduit.appendChild(lienProduit);
-  }
-}
-
+  
 // Fonction qui a pour but de creer les élements dans le HTML celon le modèle present dans le HTML
-function genererProduit(urlProduit, urlImage, name, description) {
+function genererProduit(urlProduit, urlImage, altTxt, name, description) {
   //creation de la balise <a> dans le DOM
   const baliseA = document.createElement("a");
   baliseA.setAttribute("href", "./product.html?id=" + urlProduit);
@@ -41,7 +24,7 @@ function genererProduit(urlProduit, urlImage, name, description) {
   const imageProduit = document.createElement("img");
   imageProduit.src = urlImage;
   //ajout de l'attribut ALT a IMG
-  imageProduit.setAttribute("alt", "canapé avec des coussins");
+  imageProduit.setAttribute("alt", altTxt);
 
   const nomProduit = document.createElement("h3");
   nomProduit.innerText = name;
@@ -57,6 +40,25 @@ function genererProduit(urlProduit, urlImage, name, description) {
   return baliseA;
 }
 
+//affichage des élements produit
+function affichageProduit(resultat) {
+  for (let i = 0; i < resultat.length; i++) {
+    const kanap = resultat[i];
+    const lienProduit = genererProduit(
+      kanap._id,
+      kanap.imageUrl,
+      kanap.altTxt,
+      kanap.name,
+      kanap.description
+    );
+    //récupération de l'élément du DOM qui acceuillera les fiches
+    const emplacementProduit = document.getElementById("items");
+    //Ajout des elements produit crees dans le DOM
+    emplacementProduit.appendChild(lienProduit);
+  }
+}
+
+
 /* code pour afficher uniquement un produit
 function affichageProduit(resultat) {
   if (resultat.length > 0) {
@@ -65,6 +67,7 @@ function affichageProduit(resultat) {
     const lienProduit = genererProduit(
       kanap01._id,
       kanap01.imageUrl,
+      kanap01.altTxt
       kanap01.name,
       kanap01.description
     );
