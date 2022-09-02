@@ -15,14 +15,14 @@ const lesCanaps = fetch("http://localhost:3000/api/products/")
 
 //affichage des élements produit
 function affichageProduit(resultat) {
-  if (resultat.length > 0) {
-    const kanap01 = resultat[0];
+  for (let i = 0; i < resultat.length;i++) {
+    const kanap = resultat[i];
 
     const lienProduit = genererProduit(
-      kanap01._id,
-      kanap01.imageUrl,
-      kanap01.name,
-      kanap01.description
+      kanap._id,
+      kanap.imageUrl,
+      kanap.name,
+      kanap.description
     );
 
     //récupération de l'élément du DOM qui acceuillera les fiches
@@ -53,4 +53,21 @@ function genererProduit(urlProduit, urlImage, name, description) {
   return baliseA;
 }
 
-// generation des fiche produit avec une boucle for
+/*function affichageProduit(resultat) {
+  if (resultat.length > 0) {
+    const kanap01 = resultat[0];
+
+    const lienProduit = genererProduit(
+      kanap01._id,
+      kanap01.imageUrl,
+      kanap01.name,
+      kanap01.description
+    );
+
+    //récupération de l'élément du DOM qui acceuillera les fiches
+    const emplacementProduit = document.getElementById("items");
+
+    //Ajout des elements produit crees dans le DOM
+    emplacementProduit.appendChild(lienProduit);
+  }
+} */
