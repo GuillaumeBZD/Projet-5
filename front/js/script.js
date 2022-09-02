@@ -15,35 +15,39 @@ const lesCanaps = fetch("http://localhost:3000/api/products/")
 
 //affichage des élements produit
 function affichageProduit(resultat) {
-  for (let i = 0; i < resultat.length;i++) {
+  for (let i = 0; i < resultat.length; i++) {
     const kanap = resultat[i];
-
     const lienProduit = genererProduit(
       kanap._id,
       kanap.imageUrl,
       kanap.name,
       kanap.description
     );
-
     //récupération de l'élément du DOM qui acceuillera les fiches
     const emplacementProduit = document.getElementById("items");
-
     //Ajout des elements produit crees dans le DOM
     emplacementProduit.appendChild(lienProduit);
   }
 }
 
+// Fonction qui a pour but de creer les élements dans le HTML celon le modèle present dans le HTML
 function genererProduit(urlProduit, urlImage, name, description) {
+  //creation de la balise <a> dans le DOM
   const baliseA = document.createElement("a");
   baliseA.setAttribute("href", "./product.html?id=" + urlProduit);
+  //creation de la balise <article> dans le DOM
   const articleProduit = document.createElement("article");
+
   const imageProduit = document.createElement("img");
   imageProduit.src = urlImage;
+  //ajout de l'attribut ALT a IMG
+  imageProduit.setAttribute("alt", "canapé avec des coussins");
 
   const nomProduit = document.createElement("h3");
   nomProduit.innerText = name;
 
   const descriptionProduit = document.createElement("p");
+  // Ajout d'un parametre au cas ou la description soit inexistante sur le produit avec ??
   descriptionProduit.innerText = description ?? "aucune description";
 
   baliseA.appendChild(articleProduit);
@@ -53,7 +57,8 @@ function genererProduit(urlProduit, urlImage, name, description) {
   return baliseA;
 }
 
-/*function affichageProduit(resultat) {
+/* code pour afficher uniquement un produit
+function affichageProduit(resultat) {
   if (resultat.length > 0) {
     const kanap01 = resultat[0];
 
