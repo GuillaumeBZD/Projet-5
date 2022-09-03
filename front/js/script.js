@@ -12,6 +12,7 @@ const lesCanaps = fetch("http://localhost:3000/api/products/")
   .catch(function (err) {
     //une erreur est survenue
   });
+
   
 // Fonction qui a pour but de creer les élements dans le HTML celon le modèle present dans le HTML
 function genererProduit(urlProduit, urlImage, altTxt, name, description) {
