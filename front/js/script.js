@@ -13,7 +13,6 @@ const lesCanaps = fetch("http://localhost:3000/api/products/")
     //une erreur est survenue
   });
 
-  
 // Fonction qui a pour but de creer les élements dans le HTML celon le modèle present dans le HTML
 function genererProduit(urlProduit, urlImage, altTxt, name, description) {
   //creation de la balise <a> dans le DOM
@@ -32,7 +31,7 @@ function genererProduit(urlProduit, urlImage, altTxt, name, description) {
 
   const descriptionProduit = document.createElement("p");
   // Ajout d'un parametre au cas ou la description soit inexistante sur le produit avec ??
-  descriptionProduit.innerText = description ?? "aucune description";
+  descriptionProduit.innerText = description ?? "aucune Description";
 
   baliseA.appendChild(articleProduit);
   articleProduit.appendChild(imageProduit);
@@ -58,7 +57,6 @@ function affichageProduit(resultat) {
     emplacementProduit.appendChild(lienProduit);
   }
 }
-
 
 /* code pour afficher uniquement un produit
 function affichageProduit(resultat) {
