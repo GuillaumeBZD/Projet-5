@@ -34,17 +34,19 @@ function genererTexteNode(name, price, description) {
   prixProduit.innerHTML = price;
   const descriptionProduit = document.getElementById("description");
   descriptionProduit.innerHTML = description ?? "Aucune description";
-  return nomProduit, prixProduit, descriptionProduit; // besoin de mettres les 3 ??
 }
 // afficher les couleur du produit sur la page
 function genererCouleurNode(colors) {
   const couleursProduit = document.createElement("option");
-  couleursProduit.setAttribute(colors);
+  couleursProduit.setAttribute("value", colors);
+  couleursProduit.innerText = colors;
   return couleursProduit;
 }
 
 function afficherBonProduit(reponse) {
   const ensembleKanap = reponse;
+  const emplacementCouleur = document.getElementById("colors");
+  const classImg = document.querySelector(".item__img");
   //Pour generer l'image en fonction du resultat du fetch
   const endroitImg = genererImageNode(
     ensembleKanap.imageUrl,
@@ -52,34 +54,20 @@ function afficherBonProduit(reponse) {
   );
   //Pour generer le texte en fonction du resultat du fetch
   genererTexteNode(
-    //pas besoin d'une const / variable ??
     ensembleKanap.name,
     ensembleKanap.price,
     ensembleKanap.description
   );
 
-  /*  for (let i = 0; i < colors.length; i++) {
-    const choixCouleur = colors[i];
-    const leChoix = genererCouleurNode(
-      choixCouleur.colors
-    );
-  }*/
-  const classImg = document.querySelector(".item__img");
-  classImg.appendChild(endroitImg);
-  // const emplacementCouleur = document.getElementById("colors");
-  // emplacementCouleur.appendChild(leChoix);
-}
-
-/*
-//Pour generer les options de couleurs en fonction du resultat du fetch
-function laCouleur(colors) {
-  for (let i = 0; i < colors.length; i++) {
-    const choixCouleur = colors[i];
-    const leChoix = genererCouleurNode(
-      choixCouleur.colors
-    );
-    const emplacementCouleur = document.getElementById("colors");
+  ensembleKanap.colors.forEach((laCouleur) => {
+    emplacementCouleur.appendChild(genererCouleurNode(laCouleur));
+  });
+  //fonction en plus qui fait la meme chose que forEach
+  /* for (let i = 0; i < reponse.colors.length; i++) {
+    let choixCouleur = reponse.colors[i];
+    console.table(choixCouleur);
+    let leChoix = genererCouleurNode(choixCouleur);
     emplacementCouleur.appendChild(leChoix);
-    console.log(leChoix);
-  }}
-*/
+  }*/
+  classImg.appendChild(endroitImg);
+}

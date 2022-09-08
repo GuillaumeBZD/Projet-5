@@ -31,7 +31,7 @@ function genererProduit(urlProduit, urlImage, altTxt, name, description) {
 
   const descriptionProduit = document.createElement("p");
   // Ajout d'un parametre au cas ou la description soit inexistante sur le produit avec ??
-  descriptionProduit.innerText = description ?? "aucune Description";
+  descriptionProduit.innerText = description ?? "Aucune description";
 
   baliseA.appendChild(articleProduit);
   articleProduit.appendChild(imageProduit);
