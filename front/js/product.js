@@ -55,13 +55,13 @@ function afficherBonProduit(reponse) {
   //Pour generer le texte en fonction du resultat du fetch
   genererTexteNode(
     ensembleKanap.name,
-    ensembleKanap.price,
+
     ensembleKanap.description
   );
-
-  ensembleKanap.colors.forEach((laCouleur) => {
-    emplacementCouleur.appendChild(genererCouleurNode(laCouleur));
-  });
+  ensembleKanap.price,
+    ensembleKanap.colors.forEach((laCouleur) => {
+      emplacementCouleur.appendChild(genererCouleurNode(laCouleur));
+    });
   //fonction en plus qui fait la meme chose que forEach
   /* for (let i = 0; i < reponse.colors.length; i++) {
     let choixCouleur = reponse.colors[i];
@@ -70,4 +70,20 @@ function afficherBonProduit(reponse) {
     emplacementCouleur.appendChild(leChoix);
   }*/
   classImg.appendChild(endroitImg);
+  let saveCard = localStorage;
+  function addToLocalStorage() {
+    const clic = document.getElementById("addToCart");
+    clic.addEventListener("click", function () {
+      saveCard.setItem(
+        ensembleKanap._id,
+        ensembleKanap.name,
+        ensembleKanap.colors,
+        ensembleKanap.price
+      );
+      console.table(saveCard);
+      const quantite = document.getElementByclassName(
+        ".item__content__settings__quantity"
+      );
+    });
+  }
 }
