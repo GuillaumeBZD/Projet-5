@@ -1,3 +1,4 @@
+const quantite = document.getElementById("quantity");
 //recuperation de l'url
 let RecupUrl = window.location.href;
 console.log(RecupUrl);
@@ -5,7 +6,7 @@ console.log(RecupUrl);
 let url = new URL(RecupUrl);
 let id = url.searchParams.get("id");
 console.log(id);
-
+let ensembleKanap;
 // bloc de code qui permet de recuperer dans l'API les infos d'un produit en fonction de son ID
 let getIdProduct = fetch("http://localhost:3000/api/products/" + id)
   .then((reponse) => reponse.json())
@@ -44,7 +45,7 @@ function genererCouleurNode(colors) {
 }
 
 function afficherBonProduit(reponse) {
-  const ensembleKanap = reponse;
+  ensembleKanap = reponse;
   const emplacementCouleur = document.getElementById("colors");
   const classImg = document.querySelector(".item__img");
   //Pour generer l'image en fonction du resultat du fetch
@@ -52,16 +53,17 @@ function afficherBonProduit(reponse) {
     ensembleKanap.imageUrl,
     ensembleKanap.altTxt
   );
+  classImg.appendChild(endroitImg);
   //Pour generer le texte en fonction du resultat du fetch
   genererTexteNode(
     ensembleKanap.name,
-
+    ensembleKanap.price,
     ensembleKanap.description
   );
-  ensembleKanap.price,
-    ensembleKanap.colors.forEach((laCouleur) => {
-      emplacementCouleur.appendChild(genererCouleurNode(laCouleur));
-    });
+
+  ensembleKanap.colors.forEach((laCouleur) => {
+    emplacementCouleur.appendChild(genererCouleurNode(laCouleur));
+  });
   //fonction en plus qui fait la meme chose que forEach
   /* for (let i = 0; i < reponse.colors.length; i++) {
     let choixCouleur = reponse.colors[i];
@@ -69,21 +71,57 @@ function afficherBonProduit(reponse) {
     let leChoix = genererCouleurNode(choixCouleur);
     emplacementCouleur.appendChild(leChoix);
   }*/
-  classImg.appendChild(endroitImg);
-  let saveCard = localStorage;
-  function addToLocalStorage() {
-    const clic = document.getElementById("addToCart");
-    clic.addEventListener("click", function () {
-      saveCard.setItem(
-        ensembleKanap._id,
-        ensembleKanap.name,
-        ensembleKanap.colors,
-        ensembleKanap.price
-      );
-      console.table(saveCard);
-      const quantite = document.getElementByclassName(
-        ".item__content__settings__quantity"
-      );
+  const clic = document.getElementById("addToCart");
+  clic.addEventListener("click", () => {
+    checkForm();
+  });
+}
+
+// Fonction qui recupere la couleur pour pouvoir la traiter ensuite.
+function getColor() {
+  let colorSelect = document.getElementById("colors");
+  return colorSelect.value;
+}
+
+// mettre commentaire
+function addBasket() {
+  let newProduct = {
+    id: ensembleKanap._id,
+    name: ensembleKanap.name,
+    option: getColor(),
+    quantity: Number(quantite.value),
+  };
+  let basket = JSON.parse(localStorage.getItem("basket"));
+  console.log(newProduct);
+  console.log(basket);
+  if (Array.isArray(basket) && basket.length > 0) {
+    let existe = false;
+    basket.forEach((element) => {
+      if (element.id == newProduct.id && element.option == newProduct.option) {
+        element.quantity += Number(newProduct.quantity);
+        existe = true;
+      }
     });
+    if (!existe) {
+      basket.push(newProduct);
+    }
+  } else {
+    basket = [newProduct];
+  }
+  console.table(basket);
+  localStorage.setItem("basket", JSON.stringify(basket));
+}
+
+function checkForm() {
+  let choix = getColor();
+  console.log(choix.length);
+  if (
+    Number(quantite.value) < 100 &&
+    Number(quantite.value) > 0 &&
+    choix.length > 0
+  )
+    addBasket();
+  else {
+    window.alert("ERROR");
   }
 }
