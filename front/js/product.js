@@ -83,14 +83,18 @@ function getColor() {
   return colorSelect.value;
 }
 
-// mettre commentaire
+// fonction qui sert a ajouter dans le local storage les informations ID NAME COLORS et la quantité
 function addBasket() {
   let newProduct = {
     id: ensembleKanap._id,
     name: ensembleKanap.name,
     option: getColor(),
     quantity: Number(quantite.value),
-  };
+    description: ensembleKanap.description,
+    image: ensembleKanap.imageUrl,
+    altTxt: ensembleKanap.altTxt,
+    price: 0
+    };
   let basket = JSON.parse(localStorage.getItem("basket"));
   console.log(newProduct);
   console.log(basket);
@@ -112,6 +116,7 @@ function addBasket() {
   localStorage.setItem("basket", JSON.stringify(basket));
 }
 
+// Fonction qui sert a comparer les inputs dans le formulaire afin d'en controler la validité
 function checkForm() {
   let choix = getColor();
   console.log(choix.length);
@@ -122,6 +127,8 @@ function checkForm() {
   )
     addBasket();
   else {
-    window.alert("ERROR");
+    window.alert(
+      "Merci de choisir une couleur, ou une quantité comprise entre 1 et 100"
+    );
   }
 }
