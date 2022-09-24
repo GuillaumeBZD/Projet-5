@@ -1,6 +1,9 @@
 let lePanierLocal = JSON.parse(localStorage.getItem("basket"));
 console.log(lePanierLocal);
 
+// permet de recuperer l'emplacement dans l'html pour creer les produits du panier
+const emplacementPanier = document.getElementById("cart__items");
+
 function panierVide() {
   let panierLocalVide = document.getElementById("cart__items");
   const texteVide = document.createElement("p");
@@ -8,6 +11,7 @@ function panierVide() {
   panierLocalVide.appendChild(texteVide);
   return panierLocalVide;
 }
+
 // Verif si le LocalStorage est vide ou plein
 if (lePanierLocal === 0 || lePanierLocal === null) {
   console.log("le local storage est vide");
@@ -16,6 +20,7 @@ if (lePanierLocal === 0 || lePanierLocal === null) {
   //laCreation();
   console.log("le local storage contient des elements");
   console.log(lePanierLocal);
+  creerElementDom();
 }
 /*
 // fonction pour creer les elements produit dans l'html
@@ -55,3 +60,81 @@ function updateBasketPrice() {
   });
 }
 */
+
+// fonction qui creer les emplacements
+function creerElementDom() {
+  lePanierLocal.forEach((produits) => {
+    // Creation de l'article
+    const articleNode = document.createElement("article");
+    articleNode.className = "cart__item";
+    articleNode.setAttribute("data-id", `${produits.id}`);
+    articleNode.setAttribute("data-color", `${produits.option}`);
+
+    // creation de la div img
+    const divImg = document.createElement("div");
+    divImg.className = "cart__item__img";
+
+    // creation de l'img
+    const imgNode = document.createElement("img");
+    imgNode.src = `${produits.image}`;
+    imgNode.setAttribute("alt", `${produits.altTxt}`);
+
+    //creation de la div du contenu du panier (nom etc)
+    const divItemContent = document.createElement("div");
+    divItemContent.className = "cart__item__content";
+    // creation de la div contenant les info produit
+    const divItemContentDesc = document.createElement("div");
+    divItemContentDesc.className = "cart__item__content__description";
+    // creation du titre produit
+    const h2Node = document.createElement("h2");
+    h2Node.innerHTML = `${produits.name}`;
+    // creation place de la couleur
+    const texteCouleur = document.createElement("p");
+    texteCouleur.innerHTML = `${produits.option}`;
+    // creation place du prix
+    const textePrix = document.createElement("p");
+    textePrix.innerHTML = `${produits.price}`;
+
+    const divItemContentSettings = document.createElement("div");
+    divItemContentSettings.className = "cart__item__content__settings";
+
+    const divItemContentSettingsQuantity = document.createElement("div");
+    divItemContentSettingsQuantity.className =
+      "cart__item__content__settings__quantity";
+
+    const texteQuantite = document.createElement("p");
+    texteQuantite.innerHTML = "Qté : " + `${produits.quantity}`;
+
+    const inputSet = document.createElement("input");
+    inputSet.className = "itemQuantity";
+    inputSet.setAttribute("type", "number");
+    inputSet.setAttribute("name", "itemQuantity");
+    inputSet.setAttribute("min", "1");
+    inputSet.setAttribute("max", "100");
+
+    const divDelete = document.createElement("div");
+    divDelete.className = "cart__item__content__settings__delete";
+
+    const texteDelete = document.createElement("p");
+    texteDelete.className = "deleteItem";
+    texteDelete.innerHTML = "Supprimer";
+
+    //attibution des emplacements en fonction du parent
+    emplacementPanier.appendChild(articleNode);
+    articleNode.appendChild(divImg);
+    divImg.appendChild(imgNode);
+    articleNode.appendChild(divItemContent);
+    divItemContent.appendChild(divItemContentDesc);
+    divItemContentDesc.appendChild(h2Node);
+    divItemContentDesc.appendChild(texteCouleur);
+    divItemContentDesc.appendChild(textePrix);
+    divItemContent.appendChild(divItemContentSettings);
+    divItemContentSettings.appendChild(divItemContentSettingsQuantity);
+    divItemContentSettingsQuantity.appendChild(texteQuantite);
+    divItemContentSettingsQuantity.appendChild(inputSet);
+    divItemContentSettings.appendChild(divDelete);
+    divDelete.appendChild(texteDelete);
+
+    return articleNode;
+  });
+}
