@@ -1,14 +1,23 @@
 let lePanierLocal = JSON.parse(localStorage.getItem("basket"));
 console.log(lePanierLocal);
 
-// Verif si le LocalStorage est vide ou plein
-if (lePanierLocal === 0) {
-  console.log("le local storage est vide");
-} else {
-  laCreation();
-  console.log("le local storage contient des elements");
+function panierVide() {
+  let panierLocalVide = document.getElementById("cart__items");
+  const texteVide = document.createElement("p");
+  texteVide.innerText = "Votre Panier est vide";
+  panierLocalVide.appendChild(texteVide);
+  return panierLocalVide;
 }
-
+// Verif si le LocalStorage est vide ou plein
+if (lePanierLocal === 0 || lePanierLocal === null) {
+  console.log("le local storage est vide");
+  panierVide();
+} else {
+  //laCreation();
+  console.log("le local storage contient des elements");
+  console.log(lePanierLocal);
+}
+/*
 // fonction pour creer les elements produit dans l'html
 function laCreation() {
   const emplacement = document.getElementById("cart__items");
@@ -45,3 +54,4 @@ function updateBasketPrice() {
     product.price = getPrice(product.id);
   });
 }
+*/
