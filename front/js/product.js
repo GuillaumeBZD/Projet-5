@@ -124,8 +124,12 @@ function checkForm() {
     Number(quantite.value) < 100 &&
     Number(quantite.value) > 0 &&
     choix.length > 0
-  )
+    
+  ) 
+  {
+    window.alert("L'article a été ajouté au panier")
     addBasket();
+  }
   else {
     window.alert(
       "Merci de choisir une couleur, ou une quantité comprise entre 1 et 100"
