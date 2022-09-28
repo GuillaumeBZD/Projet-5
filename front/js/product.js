@@ -64,13 +64,6 @@ function afficherBonProduit(reponse) {
   ensembleKanap.colors.forEach((laCouleur) => {
     emplacementCouleur.appendChild(genererCouleurNode(laCouleur));
   });
-  //fonction en plus qui fait la meme chose que forEach
-  /* for (let i = 0; i < reponse.colors.length; i++) {
-    let choixCouleur = reponse.colors[i];
-    console.table(choixCouleur);
-    let leChoix = genererCouleurNode(choixCouleur);
-    emplacementCouleur.appendChild(leChoix);
-  }*/
   const clic = document.getElementById("addToCart");
   clic.addEventListener("click", () => {
     checkForm();
@@ -83,7 +76,7 @@ function getColor() {
   return colorSelect.value;
 }
 
-// fonction qui sert a ajouter dans le local storage les informations ID NAME COLORS et la quantité
+// fonction qui sert a ajouter dans le local storage les informations produits
 function addBasket() {
   let newProduct = {
     id: ensembleKanap._id,
