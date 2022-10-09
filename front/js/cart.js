@@ -132,6 +132,7 @@ function creerElementDom() {
     divItemContentSettings.appendChild(divDelete);
     divDelete.appendChild(texteDelete);
     addChangeEvent(inputSet, produits);
+    addSupprEvent(texteDelete, articleNode, produits);
     return articleNode;
   });
 }
@@ -169,18 +170,21 @@ function prixFinal() {
 }
 
 //fonction pour supprimer un produit du panier
-function addSupprEvent(texteDelete, productRow, element) {
-  texteDelete.getElementsByClassName(".deleteItem");
-  texteDelete.addEventListener("click", () => {
+function addSupprEvent(texteDeleteNode, productRow, element) {
+  texteDeleteNode.addEventListener("click", () => {
     productRow.remove();
-    //supprimer element de pannierlocal
-    // faire splice pour suppr element
-    //appeler updatebasketstorage
-
-    //on peut reduce() lepanierlocal = lePanierlocal.reduce(element)
+    let newBasket = lePanierLocal.filter(
+      (product) => product.id != element.id && product.option != element.option
+    );
+    console.log(newBasket);
+    lePanierLocal = newBasket;
+    console.log(lePanierLocal);
+    updateBasketStorage();
+    prixFinal();
   });
 }
 
+//fonction qui ecoute la quantite et la met a jour ainsi que le prix
 function addChangeEvent(input, element) {
   input.addEventListener("change", () => {
     console.log(input.value);
@@ -190,7 +194,262 @@ function addChangeEvent(input, element) {
     prixFinal();
   });
 }
-
+//fonction qui sert a mettre le local storage a jour
 function updateBasketStorage() {
   localStorage.setItem("basket", JSON.stringify(lePanierLocal));
 }
+
+/* pour POST faire un tableau d'id avec map */
+
+//Expression regulieres pour verif formulaire
+const regexTexte = /^[A-ZÄÂÉÈËÊÏÎÔÔÜÛÇa-zäâàéèëêüïîüûç -]+$/i;
+const regexAdresse = /^[1-9][0-9]{0,3}(?:[\s-][a-zéèêïçA-Z\-]+)*$/;
+const regexEmail = /^[a-zA-Z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/;
+
+//constante pour la partie formulaire
+const btnCommander = document.getElementById("order");
+const prenom = document.getElementById("firstName");
+const nom = document.getElementById("lastName");
+const adresse = document.getElementById("address");
+const ville = document.getElementById("city");
+const email = document.getElementById("email");
+
+//declaration d'un tableau vide pour ensuite enregistrer les valeurs du formulaire dedans
+let contact = [];
+
+function commander() {
+  btnCommander.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    if (
+      verifPrenom() &&
+      verifNom() &&
+      verifAdresse() &&
+      verifVille() &&
+      verifEmail()
+    ) {
+      localStorage.setItem("contact", JSON.stringify(contact));
+      console.log(contact);
+    } else {
+      console.log("ERROR");
+      console.log(contact);
+    }
+  });
+}
+
+function verifPrenom() {
+  const firstNameValue = prenom.value.trim();
+  if (firstNameValue === "") {
+    document.querySelector("#firstNameErrorMsg").textContent =
+      "Merci de remplir ce champs";
+    return false;
+  } else if (!isText(firstNameValue)) {
+    document.querySelector("#firstNameErrorMsg").textContent =
+      "Merci d'indiquer un prénom valide";
+    return false;
+  } else {
+    contact["prenom"] = firstNameValue;
+    return true;
+  }
+}
+
+function verifNom() {
+  const nameValue = nom.value.trim();
+  if (nameValue === "") {
+    document.querySelector("#lastNameErrorMsg").textContent =
+      "Merci de remplir ce champs";
+    return false;
+  } else if (!isText(nameValue)) {
+    document.querySelector("#lastNameErrorMsg").textContent =
+      "Merci d'indiquer un nom valide";
+    return false;
+  } else {
+    contact["nom"] = nameValue;
+    return true;
+  }
+}
+
+function verifAdresse() {
+  const adressValue = adresse.value.trim();
+  if (adressValue === "") {
+    document.querySelector("#adressErrorMsg").textContent =
+      "Merci de remplir ce champs";
+    return false;
+  } else if (!isAdress(adressValue)) {
+    document.querySelector("#adressErrorMsg").textContent =
+      "Merci d'indiquer une adresse valide";
+    return false;
+  } else {
+    contact["adresse"] = adressValue;
+    return true;
+  }
+}
+
+function verifVille() {
+  const cityValue = ville.value.trim();
+  if (cityValue === "") {
+    document.querySelector("#cityErrorMsg").textContent =
+      "Merci de remplir ce champs";
+    return false;
+  } else if (!isText(cityValue)) {
+    document.querySelector("#cityErrorMsg").textContent =
+      "Merci d'indiquer votre ville";
+    return false;
+  } else {
+    contact["ville"] = cityValue;
+    return true;
+  }
+}
+
+function verifEmail() {
+  const emailValue = email.value.trim();
+  if (emailValue === "") {
+    document.querySelector("#emailErrorMsg").textContent =
+      "Merci de remplir ce champs";
+    return false;
+  } else if (!isEmail(emailValue)) {
+    document.querySelector("#emailErrorMsg").textContent =
+      "Merci d'indiquer une adresse EMAIL valide";
+    return false;
+  } else {
+    contact["email"] = emailValue;
+    return true;
+  }
+}
+
+// fonction qui teste la valeur texte
+function isText(valeur) {
+  return regexTexte.test(valeur);
+}
+
+// fonction qui teste la valeur adresse
+function isAdress(adress) {
+  return regexAdresse.test(adress);
+}
+
+// fonction qui test la valeur email
+function isEmail(email) {
+  return regexEmail.test(email);
+}
+
+commander();
+//-------------tentative 2 -------------------------------------------------
+
+/* //fonction pour poster
+function post () {
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  checkInputs();
+});
+};
+
+
+// fonction qui verifie si les input sont correct avant de valider
+function checkInputs() {
+  //trim pour retirer les espaces
+  const firstNameValue = prenom.value.trim();
+  const nameValue = nom.value.trim();
+  const adressValue = adresse.value.trim();
+  const cityValue = adresse.value.trim();
+  const emailValue = email.value.trim();
+
+  if (firstNameValue === "") {
+    document.querySelector("#firstNameErrorMsg").textContent =
+        "Merci de remplir ce champs";
+        return false;
+  } else if (!isText(firstNameValue)) {
+    document.querySelector("#firstNameErrorMsg").textContent =
+        "Merci d'indiquer un prénom valide";
+        return false;       
+  } else {
+    console.log(true + firstNameValue);
+  }
+
+  if (nameValue === "") {
+    document.querySelector("#lastNameErrorMsg").textContent =
+        "Merci de remplir ce champs";
+        return false;
+      
+  } else if (!isText(nameValue)) {
+    document.querySelector("#lastNameErrorMsg").textContent =
+        "Merci d'indiquer un nom valide";
+        return false;
+  } else {
+    console.log(true + nameValue);
+  }
+
+  if (adressValue === "") {
+    document.querySelector("#adressErrorMsg").textContent =
+        "Merci de remplir ce champs";
+        return false;
+  } else if (!isAdress(adressValue)) {
+    document.querySelector("#adressErrorMsg").textContent =
+        "Merci d'indiquer une adresse valide";
+        return false;
+  } else {
+    console.log(true + adressValue);
+  }
+
+  if (cityValue === "") {
+    document.querySelector("#cityErrorMsg").textContent =
+        "Merci de remplir ce champs";
+        return false;
+  } else if (!isText(cityValue)) {
+    document.querySelector("#cityErrorMsg").textContent =
+        "Merci d'indiquer votre ville";
+        return false;
+  } else {
+    console.log(true + cityValue);
+  }
+
+  if (emailValue === "") {
+    document.querySelector("#emailErrorMsg").textContent =
+        "Merci de remplir ce champs";
+        return false;
+  } else if (!isEmail(emailValue)) {
+    document.querySelector("#emailErrorMsg").textContent =
+        "Merci d'indiquer une adresse EMAIL valide";
+        return false;
+  } else {
+    console.log(true + emailValue);
+    return true;
+  }
+} */
+
+//-------------tentative 1 ---------------
+
+/* //fonction qui va tester le champs prenom pour le valider ou non
+function verifPrenom() {
+  const prenom = valeurFormu.prenom.value;
+  let testPrenom = regexTexte.test(prenom);
+  let inputPrenom = document.querySelector("#firstName");
+  inputPrenom.addEventListener("change", () => {
+    if (testPrenom == true) {
+      return true;
+    } else {
+      document.querySelector("#firstNameErrorMsg").textContent =
+        "Merci d'indiquer un prénom valide";
+      return false;
+    }
+  });
+}
+
+function verifNom() {
+  const nom = valeurFormu.nom;
+  let testNom = regexTexte.test(nom);
+  let inputNom = document.querySelector("#lastName");
+  inputNom.addEventListener("change", () => {
+    if (testNom == true) {
+      return true;
+    } else {
+      document.querySelector("#lastNameErrorMsg").textContent =
+        "Merci d'indiquer un Nom valide";
+      return false;
+    }
+  });
+}
+console.log(verifPrenom()); 
+
+---------------------------------------------------------------
+
+*/
