@@ -15,6 +15,7 @@ let getIdProduct = fetch("http://localhost:3000/api/products/" + id)
     afficherBonProduit(value);
   })
   .catch(function (err) {
+    console.log(err);
     //une erreur est survenue
   });
 

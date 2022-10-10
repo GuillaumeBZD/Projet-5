@@ -10,7 +10,7 @@ const lesCanaps = fetch("http://localhost:3000/api/products/")
     affichageProduit(value);
   })
   .catch(function (err) {
-    //une erreur est survenue
+    console.log(err)//une erreur est survenue
   });
 
 // Fonction qui a pour but de creer les élements dans le HTML celon le modèle present dans le HTML

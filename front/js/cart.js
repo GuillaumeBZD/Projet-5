@@ -3,6 +3,19 @@ let lePanierLocal = JSON.parse(localStorage.getItem("basket"));
 // permet de recuperer l'emplacement dans l'html pour creer les produits du panier
 const emplacementPanier = document.getElementById("cart__items");
 
+//Expression regulieres pour verif formulaire
+const regexTexte = /^[A-ZÄÂÉÈËÊÏÎÔÔÜÛÇa-zäâàéèëêüïîüûç -]+$/i;
+const regexAdresse = /^[1-9][0-9]{0,3}(?:[\s-][a-zéèêïçA-Z\-]+)*$/;
+const regexEmail = /^[a-zA-Z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/;
+
+//constante pour la partie formulaire
+const btnCommander = document.getElementById("order");
+const prenom = document.getElementById("firstName");
+const nom = document.getElementById("lastName");
+const adresse = document.getElementById("address");
+const ville = document.getElementById("city");
+const email = document.getElementById("email");
+
 // Verif si le LocalStorage est vide ou plein
 if (lePanierLocal === 0 || lePanierLocal === null) {
   console.log("le local storage est vide");
@@ -10,6 +23,7 @@ if (lePanierLocal === 0 || lePanierLocal === null) {
 } else {
   console.log(lePanierLocal);
   allProductsPrice();
+  commanderEvent();
 }
 
 // fonction qui creer un message quand le panier est vide
@@ -201,23 +215,9 @@ function updateBasketStorage() {
 
 /* pour POST faire un tableau d'id avec map */
 
-//Expression regulieres pour verif formulaire
-const regexTexte = /^[A-ZÄÂÉÈËÊÏÎÔÔÜÛÇa-zäâàéèëêüïîüûç -]+$/i;
-const regexAdresse = /^[1-9][0-9]{0,3}(?:[\s-][a-zéèêïçA-Z\-]+)*$/;
-const regexEmail = /^[a-zA-Z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/;
-
-//constante pour la partie formulaire
-const btnCommander = document.getElementById("order");
-const prenom = document.getElementById("firstName");
-const nom = document.getElementById("lastName");
-const adresse = document.getElementById("address");
-const ville = document.getElementById("city");
-const email = document.getElementById("email");
-
 //declaration d'un tableau vide pour ensuite enregistrer les valeurs du formulaire dedans
-let contact = [];
 
-function commander() {
+function commanderEvent() {
   btnCommander.addEventListener("click", (e) => {
     e.preventDefault();
 
@@ -228,15 +228,26 @@ function commander() {
       verifVille() &&
       verifEmail()
     ) {
-      localStorage.setItem("contact", JSON.stringify(contact));
-      console.log(contact);
+      commander();
     } else {
-      console.log("ERROR");
-      console.log(contact);
+      console.log("Formulaire incorrect");
     }
   });
 }
 
+function setContact() {
+  return {
+    firstName: prenom.value.trim(),
+    lastName: nom.value.trim(),
+    address: adresse.value.trim(),
+    city: ville.value.trim(),
+    email: email.value.trim(),
+  };
+}
+
+function setProductID() {
+  return lePanierLocal.map((product) => product.id);
+}
 function verifPrenom() {
   const firstNameValue = prenom.value.trim();
   if (firstNameValue === "") {
@@ -248,7 +259,7 @@ function verifPrenom() {
       "Merci d'indiquer un prénom valide";
     return false;
   } else {
-    contact["prenom"] = firstNameValue;
+    // contact["prenom"] = firstNameValue;
     return true;
   }
 }
@@ -264,7 +275,7 @@ function verifNom() {
       "Merci d'indiquer un nom valide";
     return false;
   } else {
-    contact["nom"] = nameValue;
+    // contact["nom"] = nameValue;
     return true;
   }
 }
@@ -280,7 +291,7 @@ function verifAdresse() {
       "Merci d'indiquer une adresse valide";
     return false;
   } else {
-    contact["adresse"] = adressValue;
+    // contact["adresse"] = adressValue;
     return true;
   }
 }
@@ -296,7 +307,7 @@ function verifVille() {
       "Merci d'indiquer votre ville";
     return false;
   } else {
-    contact["ville"] = cityValue;
+    // contact["ville"] = cityValue;
     return true;
   }
 }
@@ -312,7 +323,7 @@ function verifEmail() {
       "Merci d'indiquer une adresse EMAIL valide";
     return false;
   } else {
-    contact["email"] = emailValue;
+    // contact["email"] = emailValue;
     return true;
   }
 }
@@ -332,124 +343,26 @@ function isEmail(email) {
   return regexEmail.test(email);
 }
 
-commander();
-//-------------tentative 2 -------------------------------------------------
-
-/* //fonction pour poster
-function post () {
-form.addEventListener('submit', e => {
-  e.preventDefault();
-  checkInputs();
-});
-};
-
-
-// fonction qui verifie si les input sont correct avant de valider
-function checkInputs() {
-  //trim pour retirer les espaces
-  const firstNameValue = prenom.value.trim();
-  const nameValue = nom.value.trim();
-  const adressValue = adresse.value.trim();
-  const cityValue = adresse.value.trim();
-  const emailValue = email.value.trim();
-
-  if (firstNameValue === "") {
-    document.querySelector("#firstNameErrorMsg").textContent =
-        "Merci de remplir ce champs";
-        return false;
-  } else if (!isText(firstNameValue)) {
-    document.querySelector("#firstNameErrorMsg").textContent =
-        "Merci d'indiquer un prénom valide";
-        return false;       
-  } else {
-    console.log(true + firstNameValue);
-  }
-
-  if (nameValue === "") {
-    document.querySelector("#lastNameErrorMsg").textContent =
-        "Merci de remplir ce champs";
-        return false;
-      
-  } else if (!isText(nameValue)) {
-    document.querySelector("#lastNameErrorMsg").textContent =
-        "Merci d'indiquer un nom valide";
-        return false;
-  } else {
-    console.log(true + nameValue);
-  }
-
-  if (adressValue === "") {
-    document.querySelector("#adressErrorMsg").textContent =
-        "Merci de remplir ce champs";
-        return false;
-  } else if (!isAdress(adressValue)) {
-    document.querySelector("#adressErrorMsg").textContent =
-        "Merci d'indiquer une adresse valide";
-        return false;
-  } else {
-    console.log(true + adressValue);
-  }
-
-  if (cityValue === "") {
-    document.querySelector("#cityErrorMsg").textContent =
-        "Merci de remplir ce champs";
-        return false;
-  } else if (!isText(cityValue)) {
-    document.querySelector("#cityErrorMsg").textContent =
-        "Merci d'indiquer votre ville";
-        return false;
-  } else {
-    console.log(true + cityValue);
-  }
-
-  if (emailValue === "") {
-    document.querySelector("#emailErrorMsg").textContent =
-        "Merci de remplir ce champs";
-        return false;
-  } else if (!isEmail(emailValue)) {
-    document.querySelector("#emailErrorMsg").textContent =
-        "Merci d'indiquer une adresse EMAIL valide";
-        return false;
-  } else {
-    console.log(true + emailValue);
-    return true;
-  }
-} */
-
-//-------------tentative 1 ---------------
-
-/* //fonction qui va tester le champs prenom pour le valider ou non
-function verifPrenom() {
-  const prenom = valeurFormu.prenom.value;
-  let testPrenom = regexTexte.test(prenom);
-  let inputPrenom = document.querySelector("#firstName");
-  inputPrenom.addEventListener("change", () => {
-    if (testPrenom == true) {
-      return true;
-    } else {
-      document.querySelector("#firstNameErrorMsg").textContent =
-        "Merci d'indiquer un prénom valide";
-      return false;
-    }
-  });
+//fonction qui envoie la commande au back et nettoie le localsotrage
+function commander() {
+  let contact = setContact();
+  let products = setProductID();
+  let commande = { contact, products };
+  console.log(commande);
+  fetch("http://localhost:3000/api/products/order", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "post",
+    body: JSON.stringify(commande),
+  })
+    .then((reponse) => reponse.json())
+    .then(function (value) {
+      console.log(value);
+      localStorage.clear();
+      window.location.href = "./confirmation.html?id=" + value.orderId;
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
 }
-
-function verifNom() {
-  const nom = valeurFormu.nom;
-  let testNom = regexTexte.test(nom);
-  let inputNom = document.querySelector("#lastName");
-  inputNom.addEventListener("change", () => {
-    if (testNom == true) {
-      return true;
-    } else {
-      document.querySelector("#lastNameErrorMsg").textContent =
-        "Merci d'indiquer un Nom valide";
-      return false;
-    }
-  });
-}
-console.log(verifPrenom()); 
-
----------------------------------------------------------------
-
-*/
