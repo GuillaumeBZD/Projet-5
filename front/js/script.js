@@ -6,7 +6,6 @@ const lesCanaps = fetch("http://localhost:3000/api/products/")
     }
   })
   .then(function (value) {
-    console.log(value);
     affichageProduit(value);
   })
   .catch(function (err) {

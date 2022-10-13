@@ -1,17 +1,16 @@
 const quantite = document.getElementById("quantity");
 //recuperation de l'url
 let RecupUrl = window.location.href;
-console.log(RecupUrl);
+
 //Récupération de l'ID
 let url = new URL(RecupUrl);
 let id = url.searchParams.get("id");
-console.log(id);
+
 let ensembleKanap;
 // bloc de code qui permet de recuperer dans l'API les infos d'un produit en fonction de son ID
 let getIdProduct = fetch("http://localhost:3000/api/products/" + id)
   .then((reponse) => reponse.json())
   .then(function (value) {
-    console.log(value);
     afficherBonProduit(value);
   })
   .catch(function (err) {
@@ -113,7 +112,6 @@ function addBasket() {
 // Fonction qui sert a comparer les inputs dans le formulaire afin d'en controler la validité
 function checkForm() {
   let choix = getColor();
-  console.log(choix.length);
   if (
     Number(quantite.value) < 101 &&
     Number(quantite.value) > 0 &&

@@ -22,7 +22,6 @@ if (lePanierLocal === 0 || lePanierLocal === null) {
   console.log("le local storage est vide");
   panierVide();
 } else {
-  console.log(lePanierLocal);
   allProductsPrice();
   commanderEvent();
 }
@@ -56,7 +55,6 @@ function allProductsPrice() {
       }
     })
     .then(function (value) {
-      console.log(value);
       initBasket(value);
     })
 
@@ -157,10 +155,8 @@ function creerElementDom() {
 function quantiteTotale() {
   let laQuantiteTotale = 0;
   lePanierLocal.forEach((produits) => {
-    console.log(produits.quantity);
     laQuantiteTotale += Number(produits.quantity);
   });
-  console.log("La quantité totale est de " + laQuantiteTotale);
   return laQuantiteTotale;
 }
 
@@ -168,17 +164,14 @@ function quantiteTotale() {
 function prixTotal() {
   let lePrixTotal = 0;
   lePanierLocal.forEach((produits) => {
-    console.log(produits.price);
     lePrixTotal += produits.price * produits.quantity;
   });
-  console.log("le Prix total est de " + lePrixTotal);
   return lePrixTotal;
 }
 
 //fonction affiche le prix total du panier
 function prixFinal() {
   let finalPrice = prixTotal();
-  console.log(finalPrice);
   const endroitQte = document.getElementById("totalQuantity");
   endroitQte.innerHTML = quantiteTotale();
   const endroitPrix = document.getElementById("totalPrice");
@@ -192,9 +185,7 @@ function addSupprEvent(texteDeleteNode, productRow, element) {
     let newBasket = lePanierLocal.filter(
       (product) => product.id != element.id && product.option != element.option
     );
-    console.log(newBasket);
     lePanierLocal = newBasket;
-    console.log(lePanierLocal);
     updateBasketStorage();
     prixFinal();
   });
@@ -203,8 +194,6 @@ function addSupprEvent(texteDeleteNode, productRow, element) {
 //fonction qui ecoute la quantite et la met a jour ainsi que le prix
 function addChangeEvent(input, element) {
   input.addEventListener("change", () => {
-    console.log(input.value);
-    console.log(element);
     element.quantity = input.value;
     updateBasketStorage();
     prixFinal();
@@ -229,7 +218,7 @@ function commanderEvent() {
     ) {
       commander();
     } else {
-      console.log("Formulaire incorrect");
+      console.log("Commande non aboutie");
     }
   });
 }
@@ -350,7 +339,6 @@ function commander() {
   let contact = setContact();
   let products = setProductID();
   let commande = { contact, products };
-  console.log(commande);
   fetch("http://localhost:3000/api/products/order", {
     headers: {
       "Content-Type": "application/json",
@@ -360,7 +348,6 @@ function commander() {
   })
     .then((reponse) => reponse.json())
     .then(function (value) {
-      console.log(value);
       localStorage.clear();
       window.location.href = "./confirmation.html?id=" + value.orderId;
     })
