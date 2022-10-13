@@ -1,3 +1,4 @@
+//variable pour utiliser le localstorage
 let lePanierLocal = JSON.parse(localStorage.getItem("basket"));
 
 // permet de recuperer l'emplacement dans l'html pour creer les produits du panier
@@ -8,7 +9,7 @@ const regexTexte = /^[A-ZÄÂÉÈËÊÏÎÔÔÜÛÇa-zäâàéèëêüïîüûç
 const regexAdresse = /^[1-9][0-9]{0,3}(?:[\s-][a-zéèêïçA-Z\-]+)*$/;
 const regexEmail = /^[a-zA-Z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/;
 
-//constante pour la partie formulaire
+//constantes pour la partie formulaire
 const btnCommander = document.getElementById("order");
 const prenom = document.getElementById("firstName");
 const nom = document.getElementById("lastName");
@@ -66,6 +67,7 @@ function allProductsPrice() {
     });
 }
 
+//fonction qui initialise le panier, en recuperant les emplacement dom, le prix etc
 function initBasket(products) {
   updateBasketPrice(products);
   creerElementDom();
@@ -173,7 +175,7 @@ function prixTotal() {
   return lePrixTotal;
 }
 
-//fonction qui calcul le prix total du panier et affiche celui ci
+//fonction affiche le prix total du panier
 function prixFinal() {
   let finalPrice = prixTotal();
   console.log(finalPrice);
@@ -213,10 +215,7 @@ function updateBasketStorage() {
   localStorage.setItem("basket", JSON.stringify(lePanierLocal));
 }
 
-/* pour POST faire un tableau d'id avec map */
-
-//declaration d'un tableau vide pour ensuite enregistrer les valeurs du formulaire dedans
-
+//fonction qui sert a verifier que chaque element du formulaire est correctement valide afin de commander
 function commanderEvent() {
   btnCommander.addEventListener("click", (e) => {
     e.preventDefault();
@@ -235,6 +234,7 @@ function commanderEvent() {
   });
 }
 
+//fonction qui definie la valeur des champs pour faire la requette post le moment venu
 function setContact() {
   return {
     firstName: prenom.value.trim(),
@@ -245,9 +245,12 @@ function setContact() {
   };
 }
 
+//fonction qui definie les ID des produits qui seront commandés
 function setProductID() {
   return lePanierLocal.map((product) => product.id);
 }
+
+//sert a verifier que le champs prenom est valide
 function verifPrenom() {
   const firstNameValue = prenom.value.trim();
   if (firstNameValue === "") {
@@ -259,11 +262,11 @@ function verifPrenom() {
       "Merci d'indiquer un prénom valide";
     return false;
   } else {
-    // contact["prenom"] = firstNameValue;
     return true;
   }
 }
 
+//sert a verifier que le champs nom est valide
 function verifNom() {
   const nameValue = nom.value.trim();
   if (nameValue === "") {
@@ -275,11 +278,11 @@ function verifNom() {
       "Merci d'indiquer un nom valide";
     return false;
   } else {
-    // contact["nom"] = nameValue;
     return true;
   }
 }
 
+//sert a verifier que le champs adresse est valide
 function verifAdresse() {
   const adressValue = adresse.value.trim();
   if (adressValue === "") {
@@ -291,11 +294,11 @@ function verifAdresse() {
       "Merci d'indiquer une adresse valide";
     return false;
   } else {
-    // contact["adresse"] = adressValue;
     return true;
   }
 }
 
+//sert a verifier que le champs ville est valide
 function verifVille() {
   const cityValue = ville.value.trim();
   if (cityValue === "") {
@@ -307,11 +310,11 @@ function verifVille() {
       "Merci d'indiquer votre ville";
     return false;
   } else {
-    // contact["ville"] = cityValue;
     return true;
   }
 }
 
+//sert a verifier que le champs email est valide
 function verifEmail() {
   const emailValue = email.value.trim();
   if (emailValue === "") {
@@ -323,12 +326,11 @@ function verifEmail() {
       "Merci d'indiquer une adresse EMAIL valide";
     return false;
   } else {
-    // contact["email"] = emailValue;
     return true;
   }
 }
 
-// fonction qui teste la valeur texte
+// fonction qui teste la valeur texte des champs prenom nom ville
 function isText(valeur) {
   return regexTexte.test(valeur);
 }
@@ -343,7 +345,7 @@ function isEmail(email) {
   return regexEmail.test(email);
 }
 
-//fonction qui envoie la commande au back et nettoie le localsotrage
+//fonction qui envoie la commande au back et nettoie le localstorage
 function commander() {
   let contact = setContact();
   let products = setProductID();

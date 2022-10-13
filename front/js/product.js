@@ -44,7 +44,7 @@ function genererCouleurNode(colors) {
   couleursProduit.innerText = colors;
   return couleursProduit;
 }
-
+//Fonction qui sert a afficher le produit sur la page
 function afficherBonProduit(reponse) {
   ensembleKanap = reponse;
   const emplacementCouleur = document.getElementById("colors");
@@ -79,6 +79,8 @@ function getColor() {
 
 // fonction qui sert a ajouter dans le local storage les informations produits
 function addBasket() {
+  /* on definit comment doit être organisé l'ensemble des informations d'un produit dans le local
+  storage */
   let newProduct = {
     id: ensembleKanap._id,
     name: ensembleKanap.name,
@@ -87,11 +89,10 @@ function addBasket() {
     description: ensembleKanap.description,
     image: ensembleKanap.imageUrl,
     altTxt: ensembleKanap.altTxt,
-    price: 0
-    };
+    price: 0,
+  };
+  //pour ajouter les porduit en fonction de leur option au localstorage
   let basket = JSON.parse(localStorage.getItem("basket"));
-  console.log(newProduct);
-  console.log(basket);
   if (Array.isArray(basket) && basket.length > 0) {
     let existe = false;
     basket.forEach((element) => {
@@ -106,7 +107,6 @@ function addBasket() {
   } else {
     basket = [newProduct];
   }
-  console.table(basket);
   localStorage.setItem("basket", JSON.stringify(basket));
 }
 
@@ -115,16 +115,13 @@ function checkForm() {
   let choix = getColor();
   console.log(choix.length);
   if (
-    Number(quantite.value) < 100 &&
+    Number(quantite.value) < 101 &&
     Number(quantite.value) > 0 &&
     choix.length > 0
-    
-  ) 
-  {
-    window.alert("L'article a été ajouté au panier")
+  ) {
+    window.alert("L'article a été ajouté au panier");
     addBasket();
-  }
-  else {
+  } else {
     window.alert(
       "Merci de choisir une couleur, ou une quantité comprise entre 1 et 100"
     );

@@ -1,4 +1,4 @@
-// récup des valeurs produits
+// récup des valeurs produits via l'api
 const lesCanaps = fetch("http://localhost:3000/api/products/")
   .then(function (res) {
     if (res.ok) {
@@ -10,7 +10,7 @@ const lesCanaps = fetch("http://localhost:3000/api/products/")
     affichageProduit(value);
   })
   .catch(function (err) {
-    console.log(err)//une erreur est survenue
+    console.log(err); //une erreur est survenue
   });
 
 // Fonction qui a pour but de creer les élements dans le HTML celon le modèle present dans le HTML
@@ -57,24 +57,3 @@ function affichageProduit(resultat) {
     emplacementProduit.appendChild(lienProduit);
   }
 }
-
-/* code pour afficher uniquement un produit
-function affichageProduit(resultat) {
-  if (resultat.length > 0) {
-    const kanap01 = resultat[0];
-
-    const lienProduit = genererProduit(
-      kanap01._id,
-      kanap01.imageUrl,
-      kanap01.altTxt
-      kanap01.name,
-      kanap01.description
-    );
-
-    //récupération de l'élément du DOM qui acceuillera les fiches
-    const emplacementProduit = document.getElementById("items");
-
-    //Ajout des elements produit crees dans le DOM
-    emplacementProduit.appendChild(lienProduit);
-  }
-} */
